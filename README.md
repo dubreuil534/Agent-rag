@@ -135,6 +135,50 @@ mkdir -p documents
 #          documents/microsoft_openai_partnership.md
 ```
 
+#### Converting PDFs to Markdown
+
+The system includes a built-in PDF to Markdown converter using [Docling](https://github.com/docling-project/docling) for advanced PDF understanding:
+
+```bash
+# Convert all PDFs from the pdf/ folder (default behavior)
+python convert_pdf.py
+
+# Convert a single PDF file
+python convert_pdf.py document.pdf
+
+# Convert a PDF from URL (e.g., arXiv papers)
+python convert_pdf.py https://arxiv.org/pdf/2408.09869.pdf
+
+# Convert multiple specific PDFs
+python convert_pdf.py file1.pdf file2.pdf file3.pdf
+
+# Convert all PDFs from a custom folder
+python convert_pdf.py --folder my_pdfs/
+
+# Specify custom output directory
+python convert_pdf.py document.pdf -o custom_output_folder
+
+# Verbose output for debugging
+python convert_pdf.py -v
+```
+
+**Quick Start**: Simply place your PDF files in the `pdf/` folder and run `python convert_pdf.py` to convert them all!
+
+The converter will automatically:
+- Download PDFs from URLs if needed
+- Extract text, tables, and structure using Docling's advanced PDF understanding
+- Convert to clean Markdown format
+- Save files in the `documents/` folder (or specified output directory)
+
+You can also use the programmatic API:
+```python
+from ingestion.pdf_converter import PDFConverter
+
+converter = PDFConverter(output_dir="documents")
+output_path = converter.convert_to_markdown("document.pdf")
+print(f"Converted to: {output_path}")
+```
+
 **Note**: For a comprehensive example with extensive content, you can copy the provided `big_tech_docs` folder:
 ```bash
 cp -r big_tech_docs/* documents/
@@ -321,6 +365,7 @@ Visit http://localhost:8058/docs for interactive API documentation once the serv
 - **Hybrid Search**: Seamlessly combines vector similarity and graph traversal
 - **Temporal Knowledge**: Tracks how information changes over time
 - **Streaming Responses**: Real-time AI responses with Server-Sent Events
+- **PDF Conversion**: Built-in PDF to Markdown converter using Docling for advanced PDF understanding
 - **Flexible Providers**: Support for multiple LLM and embedding providers
 - **Semantic Chunking**: Intelligent document splitting using LLM analysis
 - **Production Ready**: Comprehensive testing, logging, and error handling
@@ -337,7 +382,11 @@ agentic-rag-knowledge-graph/
 ├── ingestion/             # Document processing
 │   ├── ingest.py         # Main ingestion pipeline
 │   ├── chunker.py        # Semantic chunking
-│   └── embedder.py       # Embedding generation
+│   ├── embedder.py       # Embedding generation
+│   └── pdf_converter.py  # PDF to Markdown conversion
+├── convert_pdf.py         # CLI tool for PDF conversion
+├── pdf_to_markdown.py     # Standalone PDF conversion script
+├── cli.py                 # Interactive CLI for the agent
 ├── sql/                   # Database schema
 ├── documents/             # Your markdown files
 └── tests/                # Comprehensive test suite
